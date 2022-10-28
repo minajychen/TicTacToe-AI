@@ -1,0 +1,124 @@
+//jiang-ying mina chen
+
+class Main {
+    
+    function int rowfromindex(int index){
+        var int index,cellNumber;
+        let cellNumber=3;
+        return Math.divide(index,cellNumber);
+    }
+
+    function int colfromindex(int index){
+        var int index,cellNumber;
+        let cellNumber=3;
+        return index-(Main.rowfromindex(index)*3);
+    }
+    
+    function char checkwin(Array cellArray, int player){
+        //winning condition for top row
+        if (cellArray[0]=player & cellArray[1]=player & cellArray[2]=player){
+            return true;
+        }
+        //winning condition for first column
+        if (cellArray[0]=player & cellArray[3]=player & cellArray[6]=player){
+            return true;
+        }
+        //winning condition for second row
+        if (cellArray[3]=player & cellArray[4]=player & cellArray[5]=player){
+            return true;
+        }
+        //winning condition for middle column
+        if (cellArray[1]=player & cellArray[4]=player & cellArray[7]=player){
+            return true;
+        }
+        //winning condition for right column
+        if (cellArray[2]=player & cellArray[5]=player & cellArray[8]=player){
+            return true;
+        }
+        //winning condition for bottom row
+        if (cellArray[6]=player & cellArray[7]=player & cellArray[8]=player){
+            return true;
+        }
+        //winning condition for left diagonal
+        if (cellArray[0]=player & cellArray[4]=player & cellArray[8]=player){
+            return true;
+        }
+        //winning condition for right diagonal
+        if (cellArray[2]=player & cellArray[4]=player & cellArray[6]=player){
+            return true;
+        }
+        return false;
+        }
+
+    function void drawboard(){// a function that draws my board. each cell is 40 x 40
+        do Screen.drawLine(250,80,370,80);
+        do Screen.drawLine(250,40,370,40);
+        do Screen.drawLine(290,0,290,120);
+        do Screen.drawLine(330,0,330,120);
+    }
+
+    function void main() { 
+        var int cellLength,startingX,startingY,i,hLineLength,vLineLength,hLineOffset,vLineOffset,row,col,index,player,computer,radius;
+        var int botindex,botrow,botcol;
+        var boolean endGame,endTurn;
+        var Array cellArray;
+        let cellLength=40;
+        let startingX=270;
+        let hLineLength=20;
+        let vLineLength=20;
+        let startingY=10;  
+        let cellArray=Array.new(9);
+        let player=1;
+        let computer=2;
+        let radius=16;
+
+        Main.drawboard()
+
+        while (~ endGame){
+            //take in user input 
+            let index=Keyboard.readInt("User chose this:");
+            let row = Main.rowfromindex(index);
+            let col= Main.colfromindex(index);
+            
+            if (cellArray[index]=0){
+                let cellArray[index]=player;
+                //draw naught
+                let hLineOffset=row*cellLength+(cellLength/2); //20
+                let vLineOffset=col*cellLength+(cellLength/2); //60
+                do Screen.drawLine(startingX+(col*cellLength),hLineOffset,startingX+(col*cellLength)+hLineLength,hLineOffset); //310,20,330,20
+                do Screen.drawLine(startingX+(col*cellLength),startingY+(row*cellLength),startingX+(col*cellLength),startingY+(row*cellLength)+vLineLength); //60,10,60,70
+            }
+            else {
+                do Output.printString("Please choose another cell.");
+                do Output.println();
+                do Output.printString("This cell is filled.");
+                do Output.println();
+            }
+            
+            if (Main.checkwin(cellArray,player)){
+                do Output.printString("Congratulations, you won!");
+                let endGame=true;
+            }
+            //starting AI behavior
+            let endTurn=false;
+            while (~endTurn){
+                let botindex=Random.randRange(8);
+                if (cellArray[botindex]=0){
+                    let cellArray[botindex]=computer;
+                    let botrow= Main.rowfromindex(botindex);
+                    let botcol= Main.colfromindex(botindex);
+                    let hLineOffset=botrow*cellLength+(cellLength/2);
+                    do Screen.drawCircle(startingX+(botcol*cellLength),hLineOffset,radius);
+                    let endTurn=true;
+                }
+            }
+            if (Main.checkwin(cellArray,computer)){
+                do Output.printString("Ah sorry, computer won!");
+                let endGame=true;
+            }
+        }
+    cellArray.dispose();
+    return;
+    }
+   
+}
